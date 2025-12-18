@@ -11,7 +11,7 @@ import (
 )
 
 type ReqBody struct {
-	Msg       string `json:"msg"`
+	Msg       string `json:"message"`
 	SessionId string `json:"session_id"`
 	To        string `json:"to"`
 }
@@ -24,9 +24,10 @@ func configureReq(req *http.Request) {
 
 func sendToWhatsapp(msg string) {
 	apiUrl := "https://api-wa.onestopcheck.id/api/whatsapp/send/text-notif"
+	sessionId := "7b1a8c7c-d107-44e4-abf3-6565371da4ca"
 	reqBody := ReqBody{
 		Msg:       msg,
-		SessionId: "your-session-id",
+		SessionId: sessionId,
 		To:        "6282250712167@c.us",
 	}
 	jsonData, _ := json.Marshal(reqBody)
