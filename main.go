@@ -28,7 +28,7 @@ func sendToWhatsapp(msg string) {
 	reqBody := ReqBody{
 		Msg:       msg,
 		SessionId: sessionId,
-		To:        "6282250712167@c.us",
+		To:        "6282151386228@c.us",
 	}
 	jsonData, _ := json.Marshal(reqBody)
 	client := &http.Client{}
