@@ -6,7 +6,7 @@ import (
 )
 
 type WALoginHandler struct {
-	Sender Sender[string]
+	Sender Sender
 	Usrp   repo.UserRepo
 }
 

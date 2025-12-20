@@ -6,7 +6,7 @@ import (
 )
 
 type WAOTPHandler struct {
-	Sender Sender[string]
+	Sender Sender
 	Usrp   repo.UserRepo
 	Otrp   repo.OtpRepo
 }

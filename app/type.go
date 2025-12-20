@@ -4,8 +4,8 @@ type EventHandler[T any] interface {
 	Handle(data T) error
 }
 
-type Sender[T any] interface {
-	Send(data T) error
+type Sender interface {
+	Send(message string) error
 }
 
 type WhatsAppAPISenderConfig struct {
@@ -51,4 +51,17 @@ type DeleteSingleInputLogData struct {
 	TimeStamp   int64          `json:"timestamp"`
 	ErrorCause  string         `json:"errorCause,omitempty"`
 	VehicleData VehicleLogData `json:"vehicleData"`
+}
+
+type FeDevLogData struct {
+	CommitMsg string `json:"commit_msg,omitempty"`
+	Author    string `json:"author,omitempty"`
+	TimeStamp string `json:"timestamp,omitempty"`
+}
+
+type FeDevLogDataProcessed struct {
+	CommitMsg string
+	Author    string
+	TimeStamp string
+	Summary   string
 }

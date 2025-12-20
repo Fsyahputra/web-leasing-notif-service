@@ -7,7 +7,7 @@ import (
 )
 
 type WADeleteSingleInputHandler struct {
-	Sender Sender[DeleteSingleInputLogData]
+	Sender Sender
 	Usrp   repo.UserRepo
 }
 
@@ -51,7 +51,7 @@ func (dh *WADeleteSingleInputHandler) Handle(data DeleteSingleInputLogData) erro
 		data.VehicleData.Noka,
 		data.VehicleData.Cabang,
 	)
-	if err := dh.Sender.Send(data); err != nil {
+	if err := dh.Sender.Send(message); err != nil {
 		return err
 	}
 	return nil

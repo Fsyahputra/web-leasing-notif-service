@@ -7,7 +7,7 @@ import (
 )
 
 type WASingleInputHandler struct {
-	Sender Sender[SingleInputLogData]
+	Sender Sender
 	Usrp   repo.UserRepo
 }
 
@@ -51,7 +51,7 @@ func (sh *WASingleInputHandler) Handle(data SingleInputLogData) error {
 		data.VehicleData.Noka,
 		data.VehicleData.Cabang,
 	)
-	if err := sh.Sender.Send(data); err != nil {
+	if err := sh.Sender.Send(message); err != nil {
 		return err
 	}
 	return nil
