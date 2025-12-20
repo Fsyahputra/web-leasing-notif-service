@@ -2,13 +2,13 @@ package IF
 
 import (
 	"context"
+	"github.com/IBM/sarama"
 	"log"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
-
-	"github.com/IBM/sarama"
 )
 
 type Kafka struct {
@@ -17,6 +17,8 @@ type Kafka struct {
 	Group   string
 	config  *sarama.Config
 	cg      sarama.ConsumerGroup
+	handler sarama.ConsumerGroupHandler
+	name    string
 }
 
 func (k *Kafka) configure() {
@@ -42,13 +44,7 @@ func (k *Kafka) newConsumer() error {
 	return nil
 }
 
-func (k *Kafka) Consume(handler sarama.ConsumerGroupHandler) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	sign := make(chan os.Signal, 1)
-	signal.Notify(sign, os.Interrupt, syscall.SIGTERM)
-
+func (k *Kafka) Consume(ctx context.Context) error {
 	go func() {
 		for {
 			select {
@@ -56,40 +52,66 @@ func (k *Kafka) Consume(handler sarama.ConsumerGroupHandler) error {
 				if !ok {
 					return
 				}
-				log.Println("consumer group error:", err)
+				log.Println("consumer group error:", err.Error())
 			case <-ctx.Done():
 				return
 			}
 		}
 	}()
 	for {
-		select {
-		case <-sign:
-			log.Println("shutdown signal received")
-			cancel()
-			return k.cg.Close()
 
-		default:
-			if err := k.cg.Consume(ctx, k.Topics, handler); err != nil {
-				log.Println("consume error:", err)
-				time.Sleep(time.Second)
-			}
-			if ctx.Err() != nil {
-				return k.cg.Close()
-			}
+		if err := k.cg.Consume(ctx, k.Topics, k.handler); err != nil {
+			log.Println("consume error:", err)
+			time.Sleep(time.Second)
+		}
+		if ctx.Err() != nil {
+			return k.cg.Close()
 		}
 	}
 }
 
-func NewKafka(Brokers []string, Topics []string, Group string) *Kafka {
+func NewKafka(Brokers []string, Topics []string, Group string, name string) *Kafka {
+	defaultName := "consumer"
+	var consumerName string
+	if name == "" {
+		consumerName = defaultName
+	}
+	consumerName = name
 	kafka := &Kafka{
 		Brokers: Brokers,
 		Topics:  Topics,
 		config:  nil,
 		Group:   Group,
 		cg:      nil,
+		name:    consumerName,
 	}
 	kafka.configure()
 	kafka.newConsumer()
 	return kafka
+}
+
+type KafkaManager struct {
+	kafkas []*Kafka
+}
+
+func (km *KafkaManager) Start() {
+	ctx, cancel := context.WithCancel(context.Background())
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	var wg sync.WaitGroup
+	for _, k := range km.kafkas {
+		wg.Go(
+			func() {
+				if err := k.Consume(ctx); err != nil {
+					log.Printf("Kafka %s failed to stop error: %v", k.name, err)
+				}
+			})
+	}
+
+	<-sig
+	cancel()
+	log.Println("Shutting down Kafka consumers...")
+	wg.Wait()
+	log.Println("All Kafka consumers have been shut down.")
+
 }

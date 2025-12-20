@@ -5,9 +5,14 @@ import (
 	"log"
 
 	"github.com/IBM/sarama"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 	brokerList := []string{"localhost:9092"}
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true

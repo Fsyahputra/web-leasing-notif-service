@@ -8,13 +8,6 @@ type Sender interface {
 	Send(message string) error
 }
 
-type WhatsAppAPISenderConfig struct {
-	ApiUrl    string
-	SessionId string
-	To        string
-	Tenant    string
-}
-
 type LoginLogData struct {
 	Uuid       string `json:"uuid"`
 	Phone      string `json:"phone"`
@@ -57,6 +50,7 @@ type FeDevLogData struct {
 	CommitMsg string `json:"commit_msg,omitempty"`
 	Author    string `json:"author,omitempty"`
 	TimeStamp string `json:"timestamp,omitempty"`
+	Diff      string `json:"diff,omitempty"`
 }
 
 type FeDevLogDataProcessed struct {

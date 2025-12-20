@@ -78,5 +78,4 @@ func (sl *SingleInputLogger) Handle(data SingleInputLogData) error {
 		TimeStamp: data.TimeStamp,
 	}
 	return sl.Vrp.AddVehicleLog(repoData)
-
 }

@@ -4,6 +4,7 @@ go 1.25.2
 
 require (
 	github.com/IBM/sarama v1.46.3
+	github.com/joho/godotenv v1.5.1
 	google.golang.org/genai v1.40.0
 )
 
