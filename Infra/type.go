@@ -24,11 +24,13 @@ type LogSender struct {
 }
 
 var EVENTTYPE_TO_WAG = map[app.EventType]string{
-	app.LoginEvent:       "",
-	app.OTPEvent:         "",
-	app.SingleInputEvent: "",
-	app.DeleteInputEvent: "",
-	app.FeDevEvent:       "",
+	app.LoginEvent:             "120363420513101473@g.us",
+	app.OTPEvent:               "120363421369311585@g.us",
+	app.SingleInputEvent:       "120363421369311585@g.us",
+	app.DeleteInputEvent:       "120363406247806640@g.us",
+	app.FeDevEvent:             "120363403873333764@g.us",
+	app.UpdateSingleInputEvent: "120363405934976050@g.us",
+	app.ActionEvent:            "120363405962710549@g.us",
 }
 
 var EVENTTYPE_TO_LOGFILENAME = map[app.EventType]string{

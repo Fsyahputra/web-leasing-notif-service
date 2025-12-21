@@ -40,3 +40,9 @@ func (dbn *DeleteSIActionDbLogger) Handle(data app.SingleInputLogData) error {
 		dbn.parseActionId,
 	)
 }
+
+func NewDeleteSIActionNotifier(notifier ActionNotifier) *DeleteSIActionNotifier {
+	return &DeleteSIActionNotifier{
+		ActionNotifier: notifier,
+	}
+}

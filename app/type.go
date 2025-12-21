@@ -61,4 +61,5 @@ const (
 	DeleteInputEvent       EventType = "WEB_LEASING.DELETE_INPUT_EVENT"
 	FeDevEvent             EventType = "WEB_LEASING.FE_DEV_EVENT"
 	UpdateSingleInputEvent EventType = "WEB_LEASING.UPDATE_SINGLE_INPUT_EVENT"
+	ActionEvent            EventType = "WEB_LEASING.ACTION_EVENT"
 )

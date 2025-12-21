@@ -42,6 +42,13 @@ func notifFormatter(data actionLogData) string {
 	return message
 }
 
+func NewActionNotifier(sender app.Sender) *ActionNotifier {
+	return &ActionNotifier{
+		Sender: sender,
+	}
+
+}
+
 func (ad *ActionNotifier) Send(data actionLogData) error {
 	message := notifFormatter(data)
 	return ad.Sender.Send(message)
@@ -61,4 +68,10 @@ func (dsl *ActionDbLogger) AddLog(data actionLogData) error {
 		ErrorCause: data.ErrorCause,
 	}
 	return dsl.Arp.AddActionLog(actionLog)
+}
+
+func NewActionDbLogger(arp repo.ActionLogRepo) *ActionDbLogger {
+	return &ActionDbLogger{
+		Arp: arp,
+	}
 }
