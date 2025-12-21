@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-
 	"github.com/Fsyahputra/web-leasing-notif-service/repo"
 )
 
@@ -78,4 +77,25 @@ func (sl *SingleInputLogger) Handle(data SingleInputLogData) error {
 		TimeStamp: data.TimeStamp,
 	}
 	return sl.Vrp.AddVehicleLog(repoData)
+}
+
+type SingleInputFileLogger struct {
+	Sender Sender
+}
+
+func (sl *SingleInputFileLogger) Handle(data SingleInputLogData) error {
+	fmtMsg := fmt.Sprintf(
+		`TimeStamp: %s | UUID: %s | Phone: %s | Nopol: %s | Noka: %s | Cabang: %s | ErrorCause: %s`,
+		fmt.Sprintf("%v", data.TimeStamp),
+		data.Uuid,
+		data.Phone,
+		data.VehicleData.Nopol,
+		data.VehicleData.Noka,
+		data.VehicleData.Cabang,
+		data.ErrorCause,
+	)
+	if err := sl.Sender.Send(fmtMsg); err != nil {
+		return err
+	}
+	return nil
 }

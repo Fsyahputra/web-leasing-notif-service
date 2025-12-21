@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/Fsyahputra/web-leasing-notif-service/repo"
+	"log"
 )
 
 type WAOTPHandler struct {
@@ -75,4 +76,25 @@ func (ol *OTPLogger) Handle(data OTPLogData) error {
 		Error:      error,
 	}
 	return ol.Lrp.AddOTPLog(repoData)
+}
+
+type OTPFileLogger struct {
+	Sender Sender
+}
+
+func (fl *OTPFileLogger) Handle(data OTPLogData) error {
+	fmtMsg := fmt.Sprintf(
+		`TimeStamp: %s | UUID: %s | Phone: %s | OTP: %s | ErrorCause: %s`,
+		fmt.Sprintf("%v", data.TimeStamp),
+		data.Uuid,
+		data.Phone,
+		data.OTP,
+		data.ErrorCause,
+	)
+
+	if err := fl.Sender.Send(fmtMsg); err != nil {
+		log.Printf("Failed to write OTP log to file: %v", err)
+		return err
+	}
+	return nil
 }

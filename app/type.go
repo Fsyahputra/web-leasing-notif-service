@@ -59,3 +59,13 @@ type FeDevLogDataProcessed struct {
 	TimeStamp string
 	Summary   string
 }
+
+type EventType string
+
+const (
+	LoginEvent       EventType = "WEB_LEASING.LOGIN_EVENT"
+	OTPEvent         EventType = "WEB_LEASING.OTP_EVENT"
+	SingleInputEvent EventType = "WEB_LEASING.SINGLE_INPUT_EVENT"
+	DeleteInputEvent EventType = "WEB_LEASING.DELETE_INPUT_EVENT"
+	FeDevEvent       EventType = "WEB_LEASING.FE_DEV_EVENT"
+)

@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+
 	"github.com/Fsyahputra/web-leasing-notif-service/repo"
 )
 
@@ -36,7 +37,6 @@ func (wh *WALoginHandler) Handle(data LoginLogData) error {
 	if data.ErrorCause != "" {
 		message += fmt.Sprintf("\nPenyebab Error : %s", data.ErrorCause)
 	}
-
 	if err := wh.Sender.Send(message); err != nil {
 		return err
 	}
@@ -62,4 +62,19 @@ func (ll *LoginLogger) Handle(data LoginLogData) error {
 		Error:      err,
 	}
 	return ll.Lrp.AddLoginLog(repoData)
+}
+
+type LoginFileLogger struct {
+	Sender Sender
+}
+
+func (l *LoginFileLogger) Handle(data LoginLogData) error {
+	fmtMessage := fmt.Sprintf(
+		`TimeStamp: %v | UUID: %s | Phone: %s | ErrorCause: %s`,
+		data.TimeStamp,
+		data.Uuid,
+		data.Phone,
+		data.ErrorCause,
+	)
+	return l.Sender.Send(fmtMessage)
 }

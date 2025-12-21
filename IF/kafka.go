@@ -2,13 +2,15 @@ package IF
 
 import (
 	"context"
-	"github.com/IBM/sarama"
 	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/Fsyahputra/web-leasing-notif-service/app"
+	"github.com/IBM/sarama"
 )
 
 type Kafka struct {
@@ -70,16 +72,20 @@ func (k *Kafka) Consume(ctx context.Context) error {
 	}
 }
 
-func NewKafka(Brokers []string, Topics []string, Group string, name string) *Kafka {
+func NewKafka(Brokers []string, Topics []app.EventType, Group string, name string) *Kafka {
 	defaultName := "consumer"
 	var consumerName string
 	if name == "" {
 		consumerName = defaultName
 	}
 	consumerName = name
+	topicStrs := make([]string, len(Topics))
+	for _, t := range Topics {
+		topicStrs = append(topicStrs, string(t))
+	}
 	kafka := &Kafka{
 		Brokers: Brokers,
-		Topics:  Topics,
+		Topics:  topicStrs,
 		config:  nil,
 		Group:   Group,
 		cg:      nil,

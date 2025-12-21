@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+
 	"google.golang.org/genai"
 )
 
@@ -35,13 +36,13 @@ func (dh *FeDevLogDataHandler) generateSummary(diff string) string {
 
 func (dh *FeDevLogDataHandler) formatMessage(data FeDevLogDataProcessed) string {
 	fmtdMsg := fmt.Sprintf(`
-PENGEMBANGAN FRONTEND LEASING DEV 💻
-
-Commit Message: %s
-Penulis: %s
-Waktu Commit: %s
-Ringkasan Perubahan:
-%s
+	PENGEMBANGAN FRONTEND WEB LEASING DEV 💻
+	
+	Commit Message: %s
+	Penulis: %s
+	Wjktu Commit: %s
+	Ringkasan Perubahan:
+	%s
 	`,
 		data.CommitMsg,
 		data.Author,
