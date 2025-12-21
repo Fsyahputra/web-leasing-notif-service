@@ -35,7 +35,7 @@ type SingleInputLogDataSaramaHandler struct {
 
 type DeleteSingleInputLogDataSaramaHandler struct {
 	noOpSaramaHandler
-	Handlers           []app.EventHandler[app.DeleteSingleInputLogData]
+	Handlers           []app.EventHandler[app.SingleInputLogData]
 	HandlerPriorityIdx int
 }
 
@@ -58,7 +58,7 @@ func (sh *SingleInputLogDataSaramaHandler) ConsumeClaim(session sarama.ConsumerG
 	return nil
 }
 
-func NewDeleteSingleInputLogSaramaHandler(handlers []app.EventHandler[app.DeleteSingleInputLogData], priorityIdx int) sarama.ConsumerGroupHandler {
+func NewDeleteSingleInputLogSaramaHandler(handlers []app.EventHandler[app.SingleInputLogData], priorityIdx int) sarama.ConsumerGroupHandler {
 	return &DeleteSingleInputLogDataSaramaHandler{
 		noOpSaramaHandler:  noOpSaramaHandler{},
 		Handlers:           handlers,
@@ -67,7 +67,7 @@ func NewDeleteSingleInputLogSaramaHandler(handlers []app.EventHandler[app.Delete
 }
 
 func (sh *DeleteSingleInputLogDataSaramaHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
-	consumeClaim[app.DeleteSingleInputLogData](session, claim, sh.Handlers, sh.HandlerPriorityIdx)
+	consumeClaim[app.SingleInputLogData](session, claim, sh.Handlers, sh.HandlerPriorityIdx)
 	return nil
 }
 

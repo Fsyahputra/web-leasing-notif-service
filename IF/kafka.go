@@ -60,6 +60,7 @@ func (k *Kafka) Consume(ctx context.Context) error {
 			}
 		}
 	}()
+
 	for {
 
 		if err := k.cg.Consume(ctx, k.Topics, k.handler); err != nil {
@@ -113,11 +114,10 @@ func (km *KafkaManager) Start() {
 				}
 			})
 	}
-
+	log.Println("Kafka consumers are running...")
 	<-sig
 	cancel()
 	log.Println("Shutting down Kafka consumers...")
 	wg.Wait()
 	log.Println("All Kafka consumers have been shut down.")
-
 }

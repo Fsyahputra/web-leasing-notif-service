@@ -6,21 +6,21 @@ import (
 	"log"
 )
 
-type WAOTPHandler struct {
+type OTPHandlerNotifier struct {
 	Sender Sender
 	Usrp   repo.UserRepo
 	Otrp   repo.OtpRepo
 }
 
-func (wo *WAOTPHandler) Handle(data OTPLogData) error {
+func (wo *OTPHandlerNotifier) Handle(data OTPLogData) error {
 	userName, err := wo.Usrp.GetUserName(data.Uuid)
 	validOTP, err := wo.Otrp.GetOTP(data.Uuid)
 	if err != nil {
 		return err
 	}
-	header := makeBold("OTP Berhasil Diverifikasi ✅")
+	header := MakeBold("OTP Berhasil Diverifikasi ✅")
 	if data.ErrorCause != "" {
-		header = makeBold("OTP Gagal Diverifikasi ❌")
+		header = MakeBold("OTP Gagal Diverifikasi ❌")
 
 	}
 	message := fmt.Sprintf(
@@ -51,12 +51,12 @@ func (wo *WAOTPHandler) Handle(data OTPLogData) error {
 	return nil
 }
 
-type OTPLogger struct {
+type OTPDbLogger struct {
 	Otrp repo.OtpRepo
 	Lrp  repo.AuthLogRepo
 }
 
-func (ol *OTPLogger) Handle(data OTPLogData) error {
+func (ol *OTPDbLogger) Handle(data OTPLogData) error {
 	var error bool
 	error = false
 	if data.ErrorCause != "" {

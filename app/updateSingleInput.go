@@ -5,13 +5,13 @@ import (
 	"github.com/Fsyahputra/web-leasing-notif-service/repo"
 )
 
-type SingleInputNotifier struct {
+type UpdateSingleInputNotifier struct {
 	Sender Sender
 	Usrp   repo.UserRepo
 }
 
-func (sh *SingleInputNotifier) Handle(data SingleInputLogData) error {
-	userName, err := sh.Usrp.GetUserName(data.Uuid)
+func (un *UpdateSingleInputNotifier) Handle(data SingleInputLogData) error {
+	userName, err := un.Usrp.GetUserName(data.Uuid)
 	if err != nil {
 		return err
 	}
@@ -20,7 +20,7 @@ func (sh *SingleInputNotifier) Handle(data SingleInputLogData) error {
 		`
 		%s
 		------------------------
-		Aksi : Input Data Kendaraan
+		Aksi : Update Data Kendaraan
 		Nama Pengguna : %s
 		Nomor Handphone : %s
 		Waktu : %s
@@ -50,20 +50,19 @@ func (sh *SingleInputNotifier) Handle(data SingleInputLogData) error {
 		data.VehicleData.Noka,
 		data.VehicleData.Cabang,
 	)
-	if err := sh.Sender.Send(message); err != nil {
+	if err := un.Sender.Send(message); err != nil {
 		return err
 	}
 	return nil
-
 }
 
-type SingleInputDbLogger struct {
+type UpdateSingleInputDbLogger struct {
 	Vrp  repo.VehicleLogRepo
 	Usrp repo.UserRepo
 }
 
-func (sl *SingleInputDbLogger) Handle(data SingleInputLogData) error {
-	leasing, err := sl.Usrp.GetLeasing(data.Uuid)
+func (ul *UpdateSingleInputDbLogger) Handle(data SingleInputLogData) error {
+	leasing, err := ul.Usrp.GetLeasing(data.Uuid)
 	if err != nil {
 		return err
 	}
@@ -76,16 +75,19 @@ func (sl *SingleInputDbLogger) Handle(data SingleInputLogData) error {
 		Action:    "ADD",
 		TimeStamp: data.TimeStamp,
 	}
-	return sl.Vrp.AddVehicleLog(repoData)
+	if dbErr := ul.Vrp.AddVehicleLog(repoData); dbErr != nil {
+		return dbErr
+	}
+	return nil
 }
 
-type SingleInputFileLogger struct {
+type UpdateSingleInputFileLogger struct {
 	Sender Sender
 }
 
-func (sl *SingleInputFileLogger) Handle(data SingleInputLogData) error {
+func (uf *UpdateSingleInputFileLogger) Handle(data SingleInputLogData) error {
 	fmtMsg := fmt.Sprintf(
-		`TimeStamp: %s | UUID: %s | Phone: %s | Nopol: %s | Noka: %s | Cabang: %s | ErrorCause: %s | Action: INPUT`,
+		`TimeStamp: %s | UUID: %s | Phone: %s | Nopol: %s | Noka: %s | Cabang: %s | ErrorCause: %s | Action: UPDATE`,
 		fmt.Sprintf("%v", data.TimeStamp),
 		data.Uuid,
 		data.Phone,
@@ -94,7 +96,7 @@ func (sl *SingleInputFileLogger) Handle(data SingleInputLogData) error {
 		data.VehicleData.Cabang,
 		data.ErrorCause,
 	)
-	if err := sl.Sender.Send(fmtMsg); err != nil {
+	if err := uf.Sender.Send(fmtMsg); err != nil {
 		return err
 	}
 	return nil

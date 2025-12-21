@@ -38,14 +38,6 @@ type SingleInputLogData struct {
 	VehicleData VehicleLogData `json:"vehicleData"`
 }
 
-type DeleteSingleInputLogData struct {
-	Uuid        string         `json:"uuid"`
-	Phone       string         `json:"phone"`
-	TimeStamp   int64          `json:"timestamp"`
-	ErrorCause  string         `json:"errorCause,omitempty"`
-	VehicleData VehicleLogData `json:"vehicleData"`
-}
-
 type FeDevLogData struct {
 	CommitMsg string `json:"commit_msg,omitempty"`
 	Author    string `json:"author,omitempty"`
@@ -63,9 +55,10 @@ type FeDevLogDataProcessed struct {
 type EventType string
 
 const (
-	LoginEvent       EventType = "WEB_LEASING.LOGIN_EVENT"
-	OTPEvent         EventType = "WEB_LEASING.OTP_EVENT"
-	SingleInputEvent EventType = "WEB_LEASING.SINGLE_INPUT_EVENT"
-	DeleteInputEvent EventType = "WEB_LEASING.DELETE_INPUT_EVENT"
-	FeDevEvent       EventType = "WEB_LEASING.FE_DEV_EVENT"
+	LoginEvent             EventType = "WEB_LEASING.LOGIN_EVENT"
+	OTPEvent               EventType = "WEB_LEASING.OTP_EVENT"
+	SingleInputEvent       EventType = "WEB_LEASING.SINGLE_INPUT_EVENT"
+	DeleteInputEvent       EventType = "WEB_LEASING.DELETE_INPUT_EVENT"
+	FeDevEvent             EventType = "WEB_LEASING.FE_DEV_EVENT"
+	UpdateSingleInputEvent EventType = "WEB_LEASING.UPDATE_SINGLE_INPUT_EVENT"
 )

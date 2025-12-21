@@ -7,12 +7,12 @@ import (
 	"google.golang.org/genai"
 )
 
-type FeDevLogDataHandler struct {
+type FeDevLogNotifier struct {
 	Sender Sender
 	APIKey string
 }
 
-func (dh *FeDevLogDataHandler) generateSummary(diff string) string {
+func (dh *FeDevLogNotifier) generateSummary(diff string) string {
 	if diff == "" {
 		return "No diff Provided"
 	}
@@ -34,7 +34,7 @@ func (dh *FeDevLogDataHandler) generateSummary(diff string) string {
 	return summary
 }
 
-func (dh *FeDevLogDataHandler) formatMessage(data FeDevLogDataProcessed) string {
+func (dh *FeDevLogNotifier) formatMessage(data FeDevLogDataProcessed) string {
 	fmtdMsg := fmt.Sprintf(`
 	PENGEMBANGAN FRONTEND WEB LEASING DEV 💻
 	
@@ -52,7 +52,7 @@ func (dh *FeDevLogDataHandler) formatMessage(data FeDevLogDataProcessed) string 
 	return fmtdMsg
 }
 
-func (dh *FeDevLogDataHandler) Handle(data FeDevLogData) error {
+func (dh *FeDevLogNotifier) Handle(data FeDevLogData) error {
 	summary := dh.generateSummary(data.Diff)
 	processedData := FeDevLogDataProcessed{
 		CommitMsg: data.CommitMsg,
@@ -64,8 +64,8 @@ func (dh *FeDevLogDataHandler) Handle(data FeDevLogData) error {
 	return dh.Sender.Send(msg)
 }
 
-func NewFeDevLogDataHandler(sender Sender, apiKey string) *FeDevLogDataHandler {
-	return &FeDevLogDataHandler{
+func NewFeDevLogDataHandler(sender Sender, apiKey string) *FeDevLogNotifier {
+	return &FeDevLogNotifier{
 		Sender: sender,
 		APIKey: apiKey,
 	}

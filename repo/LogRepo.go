@@ -29,6 +29,15 @@ type VehicleLogData struct {
 	Cabang    string
 }
 
+type ActionLogData struct {
+	Uuid       string
+	Phone      string
+	Action     string
+	TimeStamp  int64
+	ActionId   string `default:""`
+	ErrorCause string `default:""`
+}
+
 type AuthLogRepo interface {
 	AddLoginLog(logData LoginLogData) error
 	AddOTPLog(logData OTPLogData) error
@@ -36,4 +45,8 @@ type AuthLogRepo interface {
 
 type VehicleLogRepo interface {
 	AddVehicleLog(VehicleLogData) error
+}
+
+type ActionLogRepo interface {
+	AddActionLog(logData ActionLogData) error
 }

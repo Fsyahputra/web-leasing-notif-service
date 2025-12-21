@@ -6,17 +6,17 @@ import (
 	"github.com/Fsyahputra/web-leasing-notif-service/repo"
 )
 
-type WADeleteSingleInputHandler struct {
+type DeleteSingleInputNotifier struct {
 	Sender Sender
 	Usrp   repo.UserRepo
 }
 
-func (dh *WADeleteSingleInputHandler) Handle(data DeleteSingleInputLogData) error {
+func (dh *DeleteSingleInputNotifier) Handle(data SingleInputLogData) error {
 	userName, err := dh.Usrp.GetUserName(data.Uuid)
 	if err != nil {
 		return err
 	}
-	header := makeBold("Log Aktivitas Pengguna 📋")
+	header := MakeBold("Log Aktivitas Pengguna 📋")
 	message := fmt.Sprintf(
 		`
 		%s
@@ -36,7 +36,7 @@ func (dh *WADeleteSingleInputHandler) Handle(data DeleteSingleInputLogData) erro
 		message += fmt.Sprintf("\nPenyebab Error : %s\n\n", data.ErrorCause)
 	}
 
-	header2 := makeBold("Data Kendaraan 🏍️/🚘")
+	header2 := MakeBold("Data Kendaraan 🏍️/🚘")
 	message += fmt.Sprintf("\n%s\n", header2)
 	message += fmt.Sprintf(
 		`
@@ -58,12 +58,12 @@ func (dh *WADeleteSingleInputHandler) Handle(data DeleteSingleInputLogData) erro
 
 }
 
-type DeleteSingleInputLogger struct {
+type DeleteSingleInputDbLogger struct {
 	Vrp  repo.VehicleLogRepo
 	Usrp repo.UserRepo
 }
 
-func (dl *DeleteSingleInputLogger) Handle(data DeleteSingleInputLogData) error {
+func (dl *DeleteSingleInputDbLogger) Handle(data SingleInputLogData) error {
 	vehicleLog := repo.VehicleLogData{
 		Uuid:      data.Uuid,
 		Nopol:     data.VehicleData.Nopol,
@@ -75,4 +75,21 @@ func (dl *DeleteSingleInputLogger) Handle(data DeleteSingleInputLogData) error {
 		return err
 	}
 	return nil
+}
+
+type DeleteSingleInputFileLogger struct {
+	Sender Sender
+}
+
+func (df *DeleteSingleInputFileLogger) Handle(data SingleInputLogData) error {
+	fmtMsg := fmt.Sprintf("TimeStamp: %v | Uuid: %s | Phone: %s | Nopol: %s | Noka: %s | Cabang: %s | ErrorCause: %s\n | Action: DELETE",
+		data.TimeStamp,
+		data.Uuid,
+		data.Phone,
+		data.VehicleData.Nopol,
+		data.VehicleData.Noka,
+		data.VehicleData.Cabang,
+		data.ErrorCause,
+	)
+	return df.Sender.Send(fmtMsg)
 }

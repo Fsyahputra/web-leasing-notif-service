@@ -6,19 +6,19 @@ import (
 	"github.com/Fsyahputra/web-leasing-notif-service/repo"
 )
 
-type WALoginHandler struct {
+type LoginHandlerNotifier struct {
 	Sender Sender
 	Usrp   repo.UserRepo
 }
 
-func (wh *WALoginHandler) Handle(data LoginLogData) error {
+func (wh *LoginHandlerNotifier) Handle(data LoginLogData) error {
 	userName, err := wh.Usrp.GetUserName(data.Uuid)
 	if err != nil {
 		return err
 	}
-	header := makeBold("Login Berhasil ✅")
+	header := MakeBold("Login Berhasil ✅")
 	if data.ErrorCause != "" {
-		header = makeBold("Login Gagal ❌")
+		header = MakeBold("Login Gagal ❌")
 	}
 	message := fmt.Sprintf(
 		`
@@ -43,11 +43,11 @@ func (wh *WALoginHandler) Handle(data LoginLogData) error {
 	return nil
 }
 
-type LoginLogger struct {
+type LoginDbLogger struct {
 	Lrp repo.AuthLogRepo
 }
 
-func (ll *LoginLogger) Handle(data LoginLogData) error {
+func (ll *LoginDbLogger) Handle(data LoginLogData) error {
 	var err bool
 	err = false
 	if data.ErrorCause != "" {
