@@ -58,6 +58,13 @@ func (dh *DeleteSingleInputNotifier) Handle(data SingleInputLogData) error {
 
 }
 
+func NewDeleteSingleInputNotifier(userRepo repo.UserRepo, sender Sender) *DeleteSingleInputNotifier {
+	return &DeleteSingleInputNotifier{
+		Sender: sender,
+		Usrp:   userRepo,
+	}
+}
+
 type DeleteSingleInputDbLogger struct {
 	Vrp  repo.VehicleLogRepo
 	Usrp repo.UserRepo
@@ -77,6 +84,13 @@ func (dl *DeleteSingleInputDbLogger) Handle(data SingleInputLogData) error {
 	return nil
 }
 
+func NewDeleteSingleInputDbLogger(Vrp repo.VehicleLogRepo, Usrp repo.UserRepo) *DeleteSingleInputDbLogger {
+	return &DeleteSingleInputDbLogger{
+		Vrp:  Vrp,
+		Usrp: Usrp,
+	}
+}
+
 type DeleteSingleInputFileLogger struct {
 	Sender Sender
 }
@@ -92,4 +106,10 @@ func (df *DeleteSingleInputFileLogger) Handle(data SingleInputLogData) error {
 		data.ErrorCause,
 	)
 	return df.Sender.Send(fmtMsg)
+}
+
+func NewDeleteSingleInputFileLogger(sender Sender) *DeleteSingleInputFileLogger {
+	return &DeleteSingleInputFileLogger{
+		Sender: sender,
+	}
 }

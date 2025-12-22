@@ -57,6 +57,13 @@ func (sh *SingleInputNotifier) Handle(data SingleInputLogData) error {
 
 }
 
+func NewSingleInputNotifier(userRepo repo.UserRepo, sender Sender) *SingleInputNotifier {
+	return &SingleInputNotifier{
+		Sender: sender,
+		Usrp:   userRepo,
+	}
+}
+
 type SingleInputDbLogger struct {
 	Vrp  repo.VehicleLogRepo
 	Usrp repo.UserRepo
@@ -79,6 +86,14 @@ func (sl *SingleInputDbLogger) Handle(data SingleInputLogData) error {
 	return sl.Vrp.AddVehicleLog(repoData)
 }
 
+func NewSingleInputDbLogger(vrp repo.VehicleLogRepo, usrp repo.UserRepo) *SingleInputDbLogger {
+	return &SingleInputDbLogger{
+		Vrp:  vrp,
+		Usrp: usrp,
+	}
+
+}
+
 type SingleInputFileLogger struct {
 	Sender Sender
 }
@@ -98,4 +113,10 @@ func (sl *SingleInputFileLogger) Handle(data SingleInputLogData) error {
 		return err
 	}
 	return nil
+}
+
+func NewSingleInputFileLogger(sender Sender) *SingleInputFileLogger {
+	return &SingleInputFileLogger{
+		Sender: sender,
+	}
 }

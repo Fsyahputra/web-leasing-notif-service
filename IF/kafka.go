@@ -75,14 +75,13 @@ func (k *Kafka) Consume(ctx context.Context) error {
 
 func NewKafka(Brokers []string, Topics []app.EventType, Group string, name string) *Kafka {
 	defaultName := "consumer"
-	var consumerName string
+	consumerName := name
 	if name == "" {
 		consumerName = defaultName
 	}
-	consumerName = name
 	topicStrs := make([]string, len(Topics))
-	for _, t := range Topics {
-		topicStrs = append(topicStrs, string(t))
+	for i, t := range Topics {
+		topicStrs[i] = string(t)
 	}
 	kafka := &Kafka{
 		Brokers: Brokers,
@@ -120,4 +119,10 @@ func (km *KafkaManager) Start() {
 	log.Println("Shutting down Kafka consumers...")
 	wg.Wait()
 	log.Println("All Kafka consumers have been shut down.")
+}
+
+func NewKafkaManager(kafkas []*Kafka) *KafkaManager {
+	return &KafkaManager{
+		kafkas: kafkas,
+	}
 }

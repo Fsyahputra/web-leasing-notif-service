@@ -56,6 +56,13 @@ func (un *UpdateSingleInputNotifier) Handle(data SingleInputLogData) error {
 	return nil
 }
 
+func NewUpdateSingleInputNotifier(userRepo repo.UserRepo, sender Sender) *UpdateSingleInputNotifier {
+	return &UpdateSingleInputNotifier{
+		Usrp:   userRepo,
+		Sender: sender,
+	}
+}
+
 type UpdateSingleInputDbLogger struct {
 	Vrp  repo.VehicleLogRepo
 	Usrp repo.UserRepo
@@ -81,6 +88,13 @@ func (ul *UpdateSingleInputDbLogger) Handle(data SingleInputLogData) error {
 	return nil
 }
 
+func NewUpdateSingleInputDbLogger(Vrp repo.VehicleLogRepo, Usrp repo.UserRepo) *UpdateSingleInputDbLogger {
+	return &UpdateSingleInputDbLogger{
+		Vrp:  Vrp,
+		Usrp: Usrp,
+	}
+}
+
 type UpdateSingleInputFileLogger struct {
 	Sender Sender
 }
@@ -100,4 +114,10 @@ func (uf *UpdateSingleInputFileLogger) Handle(data SingleInputLogData) error {
 		return err
 	}
 	return nil
+}
+
+func NewUpdateSingleInputFileLogger(sender Sender) *UpdateSingleInputFileLogger {
+	return &UpdateSingleInputFileLogger{
+		Sender: sender,
+	}
 }

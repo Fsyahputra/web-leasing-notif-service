@@ -45,6 +45,12 @@ type FeDevLogData struct {
 	Diff      string `json:"diff,omitempty"`
 }
 
+type FeDevLogDataRaw struct {
+	CommitMsg string `json:"commit_msg,omitempty"`
+	Author    string `json:"author,omitempty"`
+	TimeStamp string `json:"timestamp,omitempty"`
+}
+
 type FeDevLogDataProcessed struct {
 	CommitMsg string
 	Author    string

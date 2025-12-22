@@ -12,6 +12,42 @@ type FeDevLogNotifier struct {
 	APIKey string
 }
 
+type FeDevLogger struct {
+	sender Sender
+}
+
+func (fl *FeDevLogger) formatMessage(data FeDevLogDataRaw) string {
+	fmtdMsg := fmt.Sprintf(`
+	FRONTEND WEB LEASING DEV LOG 💻
+	
+	Commit Message: %s
+	Penulis: %s
+	Waktu Commit: %s
+	`,
+		data.CommitMsg,
+		data.Author,
+		data.TimeStamp,
+	)
+	return fmtdMsg
+
+}
+
+func NewFeDevLogger(sender Sender) *FeDevLogger {
+	return &FeDevLogger{
+		sender: sender,
+	}
+}
+
+func (fl *FeDevLogger) Handle(data FeDevLogData) error {
+	raw := FeDevLogDataRaw{
+		CommitMsg: data.CommitMsg,
+		Author:    data.Author,
+		TimeStamp: data.TimeStamp,
+	}
+	fmtMsg := fl.formatMessage(raw)
+	return fl.sender.Send(fmtMsg)
+}
+
 func (dh *FeDevLogNotifier) generateSummary(diff string) string {
 	if diff == "" {
 		return "No diff Provided"
@@ -64,7 +100,7 @@ func (dh *FeDevLogNotifier) Handle(data FeDevLogData) error {
 	return dh.Sender.Send(msg)
 }
 
-func NewFeDevLogDataHandler(sender Sender, apiKey string) *FeDevLogNotifier {
+func NewFeDevLogNotifier(sender Sender, apiKey string) *FeDevLogNotifier {
 	return &FeDevLogNotifier{
 		Sender: sender,
 		APIKey: apiKey,

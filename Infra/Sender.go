@@ -42,19 +42,16 @@ func (s *WhatsAppAPISender) Send(message string) error {
 	return err
 }
 
-func NewWhatsAppApiSender(event app.EventType) (*WhatsAppAPISender, error) {
-	if _, ok := EVENTTYPE_TO_WAG[event]; !ok {
-		return nil, fmt.Errorf("unsupported event type: %s", event)
-	}
+func NewWhatsAppApiSender(to string) *WhatsAppAPISender {
 	apiUrl, sessionId, tenant := getWAConf()
 	return &WhatsAppAPISender{
 		config: WhatsAppAPISenderConfig{
 			ApiUrl:    apiUrl,
 			SessionId: sessionId,
-			To:        EVENTTYPE_TO_WAG[event],
+			To:        to,
 			Tenant:    tenant,
 		},
-	}, nil
+	}
 }
 
 func (l *LogSender) Send(message string) error {

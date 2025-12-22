@@ -51,6 +51,14 @@ func (wo *OTPHandlerNotifier) Handle(data OTPLogData) error {
 	return nil
 }
 
+func NewOTPHandlerNotifier(Sender Sender, Usrp repo.UserRepo, Otrp repo.OtpRepo) *OTPHandlerNotifier {
+	return &OTPHandlerNotifier{
+		Sender: Sender,
+		Usrp:   Usrp,
+		Otrp:   Otrp,
+	}
+}
+
 type OTPDbLogger struct {
 	Otrp repo.OtpRepo
 	Lrp  repo.AuthLogRepo
@@ -78,6 +86,13 @@ func (ol *OTPDbLogger) Handle(data OTPLogData) error {
 	return ol.Lrp.AddOTPLog(repoData)
 }
 
+func NewOTPDbLogger(Otrp repo.OtpRepo, Lrp repo.AuthLogRepo) *OTPDbLogger {
+	return &OTPDbLogger{
+		Otrp: Otrp,
+		Lrp:  Lrp,
+	}
+}
+
 type OTPFileLogger struct {
 	Sender Sender
 }
@@ -97,4 +112,10 @@ func (fl *OTPFileLogger) Handle(data OTPLogData) error {
 		return err
 	}
 	return nil
+}
+
+func NewOTPFileLogger(Sender Sender) *OTPFileLogger {
+	return &OTPFileLogger{
+		Sender: Sender,
+	}
 }
