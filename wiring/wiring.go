@@ -121,7 +121,7 @@ func getSender() senders {
 
 }
 
-func GetHandler() Handlers {
+func GetHandlers() Handlers {
 	senders := getSender()
 	return Handlers{
 		FeDevNotifier: FeDevLogHandlers{

@@ -1,0 +1,13 @@
+services:
+  kafka:
+    image: apache/kafka:latest
+  redis:
+    image: redis
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgres/
