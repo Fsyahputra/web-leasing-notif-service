@@ -1,0 +1,4 @@
+connections:
+  - alias: notif-leasing-db-test
+    driver: postgresql
+    dataSourceName: host=localhost port=5432 user=fadhil password=8phtnsf7 dbname=notif-leasing-db-test sslmode=disable

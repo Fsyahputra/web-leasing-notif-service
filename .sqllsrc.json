@@ -1,0 +1,14 @@
+{
+  "connections": [
+    {
+      "name": "notif-leasing-db-test",
+      "adapter": "postgres",
+      "host": "localhost",
+      "port": 5432,
+      "user": "fadhil",
+      "password": "8phtnsf7",
+      "database": "notif-leasing-db-test",
+      "projectPaths": ["/home/fadhil/git/web-leasing-notif-service"]
+    },
+  ]
+}
